@@ -25,12 +25,29 @@ public class ProducerConsumerTest {
     @Autowired
     @Qualifier("queueDestination")
     private Destination destination;
+    @Autowired
+    @Qualifier("sessionAwareDestination")
+    private Destination sessionAwareDestination;
+    @Autowired
+    @Qualifier("adapterDestination")
+    private Destination adapterDestination;
+
 
     @Test
     public void testSend() {
         for (int i = 0; i < 2; i++) {
             producer.sendMessage(destination, "你好，消费者！这是来自生产者的消息：" + (i+1));
         }
+    }
+
+    @Test
+    public void testSessionAwareMessageListener() {
+        producer.sendMessage(sessionAwareDestination, "测试SessionAwareMessageListener");
+    }
+
+    @Test
+    public void testMessageListenerAdapter() {
+        producer.sendMessage(adapterDestination, "测试MessageListenerAdapter");
     }
 
 }
