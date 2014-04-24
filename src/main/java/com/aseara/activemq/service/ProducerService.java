@@ -9,6 +9,7 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
+import java.io.Serializable;
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,6 +36,14 @@ public class ProducerService {
             }
         });
 
+    }
+
+    public void sendMessage(Destination destination, final Serializable obj) {
+
+        System.out.println("---------------生产者发送消息-----------------");
+        System.out.println("---------------生产者发了一个消息：" + obj);
+
+        jmsTemplate.convertAndSend(destination, obj);
     }
 
 }
