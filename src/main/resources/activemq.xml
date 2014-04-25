@@ -109,6 +109,4 @@
         </property>
     </bean>
 
-    <import resource="active-listener.xml" />
-
 </beans>

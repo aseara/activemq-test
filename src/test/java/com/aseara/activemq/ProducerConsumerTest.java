@@ -1,6 +1,5 @@
 package com.aseara.activemq;
 
-import com.aseara.activemq.bzns.Email;
 import com.aseara.activemq.service.ProducerService;
 import org.apache.activemq.broker.BrokerFactory;
 import org.apache.activemq.broker.BrokerService;
@@ -57,22 +56,6 @@ public class ProducerConsumerTest {
         for (int i = 0; i < 2; i++) {
             producer.sendMessage(destination, "你好，消费者！这是来自生产者的消息：" + (i+1));
         }
-    }
-
-    @Test
-    public void testSessionAwareMessageListener() {
-        producer.sendMessage(sessionAwareDestination, "测试SessionAwareMessageListener");
-    }
-
-    @Test
-    public void testMessageListenerAdapter() {
-        producer.sendMessage(adapterDestination, "测试MessageListenerAdapter");
-    }
-
-    @Test
-    public void testSendEmail() {
-        Email email = new Email("zhangsan@xxx.com", "主题", "内容");
-        producer.sendMessage(emailDestination, email);
     }
 
     @After
