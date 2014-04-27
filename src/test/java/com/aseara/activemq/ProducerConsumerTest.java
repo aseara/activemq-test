@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -25,26 +26,20 @@ import java.io.File;
 @ContextConfiguration(locations = {"classpath:activemq.xml"})
 public class ProducerConsumerTest {
 
+    @Value("${activemq.broker}")
+    private String brokerUrl;
+
     @Autowired
     private ProducerService producer;
     @Autowired
     @Qualifier("queueDestination")
     private Destination destination;
-    @Autowired
-    @Qualifier("sessionAwareDestination")
-    private Destination sessionAwareDestination;
-    @Autowired
-    @Qualifier("adapterDestination")
-    private Destination adapterDestination;
-    @Autowired
-    @Qualifier("emailDestination")
-    private Destination emailDestination;
 
     private BrokerService broker;
 
     @Before
     public void before() throws Exception {
-        broker = BrokerFactory.createBroker("broker:tcp://localhost:61616");
+        broker = BrokerFactory.createBroker("broker:" + brokerUrl);
         broker.setDataDirectory("target/activemq-data");
         File dataFile = broker.getDataDirectoryFile();
         System.out.println("dataFilePath: " + dataFile.getCanonicalPath());

@@ -6,6 +6,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
                            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd ">
 
+    <context:property-placeholder location="classpath:activemq.properties" />
     <context:component-scan base-package="com.aseara.activemq" />
 
     <bean id="connectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
@@ -13,9 +14,7 @@
             <bean class="org.apache.activemq.pool.PooledConnectionFactory">
                 <property name="connectionFactory">
                     <bean class="org.apache.activemq.ActiveMQConnectionFactory">
-                        <property name="brokerURL" value="tcp://localhost:61616" />
-                        <property name="userName" value="admin" />
-                        <property name="password" value="admin" />
+                        <property name="brokerURL" value="${activemq.broker}" />
                     </bean>
                 </property>
                 <property name="maxConnections" value="10" />
@@ -25,22 +24,6 @@
 
     <bean id="queueDestination" class="org.apache.activemq.command.ActiveMQQueue">
         <constructor-arg value="queue" />
-    </bean>
-
-    <bean id="sessionAwareDestination" class="org.apache.activemq.command.ActiveMQQueue">
-        <constructor-arg value="sessionAwareQueue" />
-    </bean>
-
-    <bean id="adapterDestination" class="org.apache.activemq.command.ActiveMQQueue">
-        <constructor-arg value="adapterQueue" />
-    </bean>
-
-    <bean id="responseDestination" class="org.apache.activemq.command.ActiveMQQueue">
-        <constructor-arg value="responseQueue" />
-    </bean>
-
-    <bean id="emailDestination" class="org.apache.activemq.command.ActiveMQQueue">
-        <constructor-arg value="emailQueue" />
     </bean>
 
     <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
@@ -53,58 +36,11 @@
         <property name="connectionFactory" ref="connectionFactory" />
         <property name="destination" ref="queueDestination" />
         <property name="messageListener">
-            <bean class="com.aseara.activemq.listener.ConsumerMessageListener" />
-        </property>
-    </bean>
-
-    <bean id="sessionAwareContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
-        <property name="connectionFactory" ref="connectionFactory" />
-        <property name="destination" ref="sessionAwareDestination" />
-        <property name="messageListener">
-            <bean class="com.aseara.activemq.listener.ConsumerSessionAwareMessageListener">
-                <property name="destination" ref="queueDestination" />
-            </bean>
-        </property>
-    </bean>
-
-    <bean id="adapterContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
-        <property name="connectionFactory" ref="connectionFactory" />
-        <property name="destination" ref="adapterDestination" />
-        <property name="messageListener">
             <bean class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
                 <property name="delegate">
-                    <bean class="com.aseara.activemq.listener.ConsumerListener" />
+                    <bean class="com.aseara.activemq.listener.ConsumerMessageListener" />
                 </property>
-                <property name="defaultListenerMethod" value="receiveMessage" />
-                <property name="defaultResponseDestination" ref="responseDestination" />
-            </bean>
-        </property>
-    </bean>
-
-    <bean id="responseContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
-        <property name="connectionFactory" ref="connectionFactory" />
-        <property name="destination" ref="responseDestination" />
-        <property name="messageListener">
-            <bean class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
-                <property name="delegate">
-                    <bean class="com.aseara.activemq.listener.ResponseListener" />
-                </property>
-                <property name="defaultListenerMethod" value="getResponseMessage" />
-            </bean>
-        </property>
-    </bean>
-
-    <bean id="emailContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
-        <property name="concurrentConsumers" value="5" />
-        <property name="maxConcurrentConsumers" value="20" />
-        <property name="connectionFactory" ref="connectionFactory" />
-        <property name="destination" ref="emailDestination" />
-        <property name="messageListener">
-            <bean class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
-                <property name="delegate">
-                    <bean class="com.aseara.activemq.listener.EmailListener" />
-                </property>
-                <property name="defaultListenerMethod" value="receiveEmail" />
+                <property name="defaultListenerMethod" value="onMessage" />
             </bean>
         </property>
     </bean>
