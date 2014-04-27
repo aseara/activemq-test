@@ -12,6 +12,14 @@ import org.springframework.stereotype.Component;
 public class Handler {
 
     public void handle(final String message) {
-        System.out.println(message );
+        Thread currentThread = Thread.currentThread();
+        String msgPass = message + ", handler: " + currentThread.getName();
+        //System.out.println(msgPass+"---------------start");
+        try{
+            Thread.sleep(1000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(msgPass+"---------------end");
     }
 }

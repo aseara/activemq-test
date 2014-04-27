@@ -1,6 +1,6 @@
 package com.aseara.activemq.listener;
 
-import com.aseara.activemq.handler.Handler;
+import com.aseara.activemq.handler.HandlerScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -12,10 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ConsumerMessageListener {
 
     @Autowired
-    private Handler handler;
+    private HandlerScheduler scheduler;
 
     public void onMessage(String message) {
         String passMsg = message + ", msgListener: " + Thread.currentThread().getName();
-        handler.handle(passMsg);
+        scheduler.schedule(passMsg);
     }
 }

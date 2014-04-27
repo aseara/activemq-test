@@ -33,8 +33,15 @@ public class ProducerConsumerTest {
 
     @Test
     public void testSend() throws Exception{
-        for (int i = 0; i < 20; i++) {
+        int msgSize = 20;
+        for (int i = 0; i < msgSize; i++) {
             producer.sendMessage(destination, "msgIndex: " + (i+1));
+        }
+
+        try {
+            Thread.sleep(500 * msgSize);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

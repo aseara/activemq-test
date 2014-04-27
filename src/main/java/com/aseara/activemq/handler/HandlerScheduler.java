@@ -35,6 +35,14 @@ public class HandlerScheduler {
     @SuppressWarnings("rawtypes")
     public void schedule(final String message) {
 
+        executor.execute(() -> {
+            try {
+                handler.handle(message);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
         System.out.println(
                 String.format("[monitor] [%d/%d] Active: %d, Completed: %d, Task: %d, isShutdown: %s, isTerminated: %s",
                         executor.getPoolSize(),
@@ -44,14 +52,5 @@ public class HandlerScheduler {
                         executor.getTaskCount(),
                         executor.isShutdown(),
                         executor.isTerminated()));
-
-        executor.execute(() -> {
-            try {
-                handler.handle(message);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-
     }
 }
