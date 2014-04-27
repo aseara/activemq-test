@@ -34,7 +34,7 @@ public class ProducerConsumerTest {
     @Test
     public void testSend() throws Exception{
         for (int i = 0; i < 20; i++) {
-            producer.sendMessage(destination, "你好，消费者！这是来自生产者的消息：" + (i+1));
+            producer.sendMessage(destination, "msgIndex: " + (i+1));
         }
     }
 

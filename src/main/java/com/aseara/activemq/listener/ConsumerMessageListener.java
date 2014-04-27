@@ -1,5 +1,8 @@
 package com.aseara.activemq.listener;
 
+import com.aseara.activemq.handler.Handler;
+import org.springframework.beans.factory.annotation.Autowired;
+
 /**
  * Created with IntelliJ IDEA.
  * User: aseara
@@ -8,10 +11,11 @@ package com.aseara.activemq.listener;
  */
 public class ConsumerMessageListener {
 
+    @Autowired
+    private Handler handler;
+
     public void onMessage(String message) {
-        System.out.println(
-                "接收到一个纯文本消息。\n" +
-                "消息内容是：" + message
-        );
+        String passMsg = message + ", msgListener: " + Thread.currentThread().getName();
+        handler.handle(passMsg);
     }
 }
