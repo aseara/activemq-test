@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.io.IOException;
+import java.net.BindException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,8 +32,13 @@ public class BrokerInitializer {
             broker = BrokerFactory.createBroker("broker:" + brokerUrl);
             broker.setDataDirectory("target/activemq-data");
             broker.start();
+        } catch (IOException e) {
+            if (!(e.getCause() instanceof BindException)) {
+                e.printStackTrace();
+            }
+
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -39,9 +46,11 @@ public class BrokerInitializer {
     @PreDestroy
     private void destroy() {
         try {
-            broker.stop();
+            if (broker != null && broker.isStarted()) {
+                broker.stop();
+            }
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         }
     }
 }
